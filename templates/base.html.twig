@@ -13,7 +13,7 @@
     </head>
     <body>
         <header class="p-4 bg-secondary mb-3">
-            <h1 class="text-center">Blog</h1>
+            <h1 class="text-center">  <a href="{{ path('app_home') }}"  class="">Blog</a></h1>
             <nav> 
                 {% if app.user %}
                     <a href="{{ path('app_voiture_index') }}"  class="btn btn-success">Voiture</a>
@@ -31,8 +31,10 @@
                 
             </nav>
         </header>
-        <main class="container">
+        <main class="container mb-3">
             {% block body %}  {% endblock %}
         </main>
+
+        <footer class="mt-5"></footer>
     </body>
 </html>

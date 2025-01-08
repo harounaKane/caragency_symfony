@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
+use App\Entity\User;
 use App\Entity\Voiture;
 use App\Form\ReservationType;
 use App\Form\VoitureType;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/voiture')]
 final class VoitureController extends AbstractController
@@ -44,25 +46,40 @@ final class VoitureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_voiture_show', methods: ['GET'])]
-    public function show(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_voiture_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Voiture $voiture, EntityManagerInterface $entityManager, #[CurrentUser()] ?User $user): Response
     {
         $reservation = new Reservation(); 
+        $reservation->setDateReservation(new \DateTimeImmutable());
+
         $form = $this->createForm(ReservationType::class, $reservation);
+
+        
+      $form->remove("date_reservation");
+      $form->remove("prix");
+      $form->remove("vehicule");
+
         $form->handleRequest($request);
 
-        $form->remove("date_reservation");
-        $form->remove("prix");
+        $reservation->setVehicule($voiture);
+        $reservation->setUser($user);
+    
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //traitements
+            $debut = $reservation->getDateDebut();
+            $fin = $reservation->getDateFin();
+
+            $nbJours = $debut->diff($fin)->format('%a');
+
+            $reservation->setPrix( $voiture->getPrixJournalier() * $nbJours );
 
             $entityManager->persist($reservation);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
+
 
         return $this->render('voiture/show.html.twig', [
             'voiture' => $voiture,

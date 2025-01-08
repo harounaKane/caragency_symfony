@@ -36,6 +36,10 @@ class Commentaire
         return $this->contenu_commentaire;
     }
 
+    public function getComment(){
+        return $this->contenu_commentaire;
+    }
+
     public function setContenuCommentaire(string $contenu_commentaire): static
     {
         $this->contenu_commentaire = $contenu_commentaire;

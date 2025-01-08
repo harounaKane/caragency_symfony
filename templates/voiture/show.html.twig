@@ -5,37 +5,26 @@
 {% block body %}
     <h1>Voiture</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ voiture.id }}</td>
-            </tr>
-            <tr>
-                <th>Marque</th>
-                <td>{{ voiture.marque }}</td>
-            </tr>
-            <tr>
-                <th>Model</th>
-                <td>{{ voiture.model }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ voiture.description }}</td>
-            </tr>
-            <tr>
-                <th>Prix_journalier</th>
-                <td>{{ voiture.prixJournalier }}</td>
-            </tr>
-            <tr>
-                <th>Couleur</th>
-                <td>{{ voiture.couleur }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        
+        <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap" style="width: 20%;">
+    </div>
+    Voiture de marque {{voiture.marque}}. Prix Journalire : <strong>{{voiture.prixJournalier}} €</strong>
+    <div class="mb-3">
+        {{voiture.description}}
+    </div>
+
+    {% for com in voiture.commentaires %}
+       <div> Auteur : <strong> {{com.user.prenom}} </strong></div>
+       <div> Date : <strong> {{com.date | date("d/m/Y")}} </strong></div>
+       <div> {{com.comment }}</div>
+       <hr>
+    {% endfor %}
+
+    <div class="my-5">Réserver</div>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button class="btn">{{ button_label|default('Save') }}</button>
+        <button class="btn btn-success">{{ button_label|default('Réserver') }}</button>
     {{ form_end(form) }}
 {% endblock %}
