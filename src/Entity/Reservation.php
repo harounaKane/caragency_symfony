@@ -29,6 +29,9 @@ class Reservation
     #[ORM\Column]
     private ?float $prix = null;
 
+    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Reservation
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

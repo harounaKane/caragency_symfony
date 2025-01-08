@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use App\Entity\Voiture;
+use App\Form\ReservationType;
 use App\Form\VoitureType;
 use App\Repository\VoitureRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/')]
+#[Route('/voiture')]
 final class VoitureController extends AbstractController
 {
     #[Route(name: 'app_voiture_index', methods: ['GET'])]
@@ -43,10 +45,28 @@ final class VoitureController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_voiture_show', methods: ['GET'])]
-    public function show(Voiture $voiture): Response
+    public function show(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {
+        $reservation = new Reservation(); 
+        $form = $this->createForm(ReservationType::class, $reservation);
+        $form->handleRequest($request);
+
+        $form->remove("date_reservation");
+        $form->remove("prix");
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //traitements
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('voiture/show.html.twig', [
             'voiture' => $voiture,
+            'form' => $form
         ]);
     }
 
