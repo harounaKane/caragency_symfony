@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Commentaire;
 use App\Entity\Reservation;
 use App\Entity\User;
 use App\Entity\Voiture;
+use App\Form\CommentaireType;
 use App\Form\ReservationType;
 use App\Form\VoitureType;
 use App\Repository\VoitureRepository;
@@ -46,7 +48,7 @@ final class VoitureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_voiture_show', methods: ['GET', 'POST'])]
+    #[Route('/{id}/detail', name: 'app_voiture_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Voiture $voiture, EntityManagerInterface $entityManager, #[CurrentUser()] ?User $user): Response
     {
         $reservation = new Reservation(); 
@@ -55,15 +57,14 @@ final class VoitureController extends AbstractController
         $form = $this->createForm(ReservationType::class, $reservation);
 
         
-      $form->remove("date_reservation");
-      $form->remove("prix");
-      $form->remove("vehicule");
+        $form->remove("date_reservation");
+        $form->remove("prix");
+        $form->remove("vehicule");
 
         $form->handleRequest($request);
 
         $reservation->setVehicule($voiture);
         $reservation->setUser($user);
-    
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -77,13 +78,26 @@ final class VoitureController extends AbstractController
             $entityManager->persist($reservation);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user', [], Response::HTTP_SEE_OTHER);
         }
 
+        $comment = new Commentaire();
+
+        $formComment = $this->createForm(CommentaireType::class, $comment);
+
+        $formComment->remove('date');
+        $formComment->remove('vehicule');
+
+        $formComment->handleRequest($request);
+
+        $comment->setVehicule($voiture);
+
+        //
 
         return $this->render('voiture/show.html.twig', [
             'voiture' => $voiture,
-            'form' => $form
+            'form' => $form,
+            'formComment' => $formComment
         ]);
     }
 

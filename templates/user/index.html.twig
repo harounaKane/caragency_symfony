@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>E-mail</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> {{ app.user.prenom }} </td>
+                <td> {{ app.user.nom }} </td>
+                <td> {{ app.user.email }} </td>
+                <td>
+                    <a href="{{ path('app_user_update', {'id': app.user.id}) }}">UPDATE</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    
+    {% if app.user.reservation | length > 0 %}
+
+        <h3 class="my-3 text-center">Mes reservations</h3>
+            
+        <table class="table table-strepid">
+            <tr class="table-dark">
+                <th>Voiture</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Total</th>
+            </tr>
+
+            {% for res in app.user.reservation %}
+                <tr>
+                    <td> {{ res.vehicule.marque }} </td>
+                    <td> {{ res.dateDebut | date("d/m/Y") }} </td>
+                    <td> {{ res.dateFin | date("d/m/Y") }} </td>
+                    <td> {{ res.prix }} €</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% else %}
+        Vous n'avez aucune réservation
+    {% endif %}
+
+{% endblock %}

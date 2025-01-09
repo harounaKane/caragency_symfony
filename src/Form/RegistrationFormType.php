@@ -52,17 +52,6 @@ class RegistrationFormType extends AbstractType
             ])
             ->add("prenom", TextType::class)
             ->add("nom", TextType::class)
-            ->add('ville', ChoiceType::class, [
-                "mapped" => false,
-                'choices'  => [
-                    'Maybe' => null,
-                    'Yes' => true,
-                    'No' => false,
-                ],
-                "multiple" => false,
-                "expanded" => true
-
-            ])
         ;
     }
 

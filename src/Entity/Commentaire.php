@@ -26,6 +26,11 @@ class Commentaire
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     private ?User $user = null;
 
+    public function __construct()
+    {
+        $this->date = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -16,9 +16,14 @@
             <h1 class="text-center">  <a href="{{ path('app_home') }}"  class="">Blog</a></h1>
             <nav> 
                 {% if app.user %}
-                    <a href="{{ path('app_voiture_index') }}"  class="btn btn-success">Voiture</a>
-                    <a href="{{ path('app_reservation_index') }}" class="btn btn-success">Réservation</a>
-                    <a href="{{ path('app_commentaire_index') }}" class="btn btn-success">Commentaire</a>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_voiture_index') }}"  class="btn btn-success">Voiture</a>
+                        <a href="{{ path('app_reservation_index') }}" class="btn btn-success">Réservation</a>
+                        <a href="{{ path('app_commentaire_index') }}" class="btn btn-success">Commentaire</a>
+                    {% endif %}
+
+                    <a href="{{ path('app_user') }}" class="btn btn-success">Mon compte</a>
                     <a href="{{ path('app_logout') }}" class="btn btn-danger">Déconnexion</a>
 
                     <div class="text-end">

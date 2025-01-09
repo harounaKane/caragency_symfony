@@ -13,6 +13,22 @@
     <div class="mb-3">
         {{voiture.description}}
     </div>
+    
+    <div class="mb-3">
+        {{voiture.reservations | length}} réservations au compteur ! 
+    </div>
+
+    
+    <div class="my-5 h4">Réserver</div>
+    
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">{{ button_label|default('Réserver') }}</button>
+    {{ form_end(form) }}
+
+    <hr>
+
+    <h5 class="alert alert-info">Avis clients</h5>
 
     {% for com in voiture.commentaires %}
        <div> Auteur : <strong> {{com.user.prenom}} </strong></div>
@@ -21,10 +37,11 @@
        <hr>
     {% endfor %}
 
-    <div class="my-5">Réserver</div>
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
+    <div class="my-5 h4">Commenter</div>
+    
+    {{ form_start(formComment) }}
+        {{ form_widget(formComment) }}
         <button class="btn btn-success">{{ button_label|default('Réserver') }}</button>
-    {{ form_end(form) }}
+    {{ form_end(formComment) }}
+
 {% endblock %}
